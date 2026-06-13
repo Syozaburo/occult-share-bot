@@ -1,4 +1,6 @@
 const { TwitterApi } = require("twitter-api-v2");
+const fs = require("fs");
+const path = require("path");
 require("dotenv").config();
 
 /**
@@ -43,12 +45,20 @@ async function postTweet(text) {
   console.log(text);
   console.log("─".repeat(50));
 
-  const tweet = await rwClient.v2.tweet(text);
+  const imagePath = path.join(__dirname, "../assets/lp-thumbnail.png");
+  let mediaId;
+  if (fs.existsSync(imagePath)) {
+    mediaId = await rwClient.v1.uploadMedia(imagePath, { mimeType: "image/png" });
+    console.log(`🖼️ 画像アップロード完了: ${mediaId}`);
+  }
+
+  const tweet = await rwClient.v2.tweet({
+    text,
+    ...(mediaId ? { media: { media_ids: [mediaId] } } : {}),
+  });
 
   console.log(`✅ 投稿成功！ Tweet ID: ${tweet.data.id}`);
-  console.log(
-    `🔗 https://twitter.com/i/web/status/${tweet.data.id}`
-  );
+  console.log(`🔗 https://twitter.com/i/web/status/${tweet.data.id}`);
 
   return tweet;
 }
