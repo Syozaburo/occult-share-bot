@@ -45,11 +45,16 @@ async function postTweet(text) {
   console.log(text);
   console.log("─".repeat(50));
 
-  const imagePath = path.join(__dirname, "../assets/lp-thumbnail.png");
+  const images = ["lp-1.png", "lp-2.png", "lp-3.png"];
+  const baseDate = new Date("2024-01-01");
+  const jst = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+  const dayIndex = Math.floor((jst - baseDate) / (1000 * 60 * 60 * 24));
+  const imageFile = images[dayIndex % images.length];
+  const imagePath = path.join(__dirname, "../assets", imageFile);
   let mediaId;
   if (fs.existsSync(imagePath)) {
     mediaId = await rwClient.v1.uploadMedia(imagePath, { mimeType: "image/png" });
-    console.log(`🖼️ 画像アップロード完了: ${mediaId}`);
+    console.log(`🖼️ 画像アップロード完了: ${imageFile} (${mediaId})`);
   }
 
   const tweet = await rwClient.v2.tweet({
