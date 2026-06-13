@@ -1,0 +1,16 @@
+{
+  "name": "occult-share-bot",
+  "version": "1.0.0",
+  "description": "X (Twitter) Bot for occult-share.vercel.app",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "post": "node src/post.js",
+    "test": "node src/test.js"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.3",
+    "twitter-api-v2": "^1.17.0",
+    "dotenv": "^16.3.1"
+  }
+}
